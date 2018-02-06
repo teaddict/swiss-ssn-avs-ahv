@@ -1,0 +1,49 @@
+{
+  "name": "swiss-ssn",
+  "version": "1.0.0",
+  "license": "GPL",
+  "description": "Small utility for validating and generating Swiss national identification number.",
+  "author": "teaddict",
+  "main": "dist/swiss-ssn.js",
+  "keywords": [
+    "Swiss",
+    "SSN",
+    "Validation",
+    "Generate",
+    "National",
+    "Switzerland",
+    "Schweiz"
+  ],
+  "scripts": {
+    "dist": "./node_modules/.bin/babel src/swiss-ssn.js > dist/swiss-ssn.js && ./node_modules/.bin/uglifyjs dist/swiss-ssn.js > dist/swiss-ssn.min.js",
+    "test": "./node_modules/.bin/mocha --compilers js:babel-core/register",
+    "lint": "./node_modules/.bin/eslint finnish-ssn.js test/*.js",
+    "prepublish": "npm run test && npm run dist",
+    "validate": "npm ls"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.8.0",
+    "babel-eslint": "^6.1.2",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-plugin-transform-es2015-modules-umd": "^6.8.0",
+    "babel-preset-es2015": "^6.6.0",
+    "babel-preset-stage-0": "^6.5.0",
+    "chai": "^3.0.0",
+    "mocha": "^3.1.2",
+    "eslint": "^3.5.0",
+    "precommit-hook": "^3.0.0",
+    "travis-lint": "^1.0.0",
+    "uglify": "^0.1.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/teaddict/swiss-ssn-avs-ahv"
+  },
+  "bugs": {
+    "url": "https://github.com/teaddict/swiss-ssn-avs-ahv/issues"
+  },
+  "pre-commit": [
+    "test",
+    "lint"
+  ]
+}
