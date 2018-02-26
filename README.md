@@ -23,7 +23,7 @@ bower install swiss-ssn
 From unpkg.com
 
 ```html
-<script src="https://unpkg.com/swiss-ssn-avs-ahv/dist/swiss-ssn.min.js"></script>
+<script src="https://unpkg.com/swiss-ssn/dist/swiss-ssn.min.js"></script>
 ```
 
 
