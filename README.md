@@ -1,6 +1,12 @@
 Swiss National Identification Number (AHV/AVS) or (SSN) validation and generation
 ===================================
 
+[![npm version](https://badge.fury.io/js/swiss-ssn.svg)](https://badge.fury.io/js/swiss-ssn) 
+<img src="https://img.shields.io/npm/dm/swiss-ssn.svg" height="18px" />
+===================================
+
+
+
 - A micro Javascript library for validating and generating Swiss National Identification Number.
 - Lightweight
 - No dependencies
