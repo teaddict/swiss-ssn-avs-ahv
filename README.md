@@ -113,6 +113,9 @@ Test Online
 Changelog
 ---------
 
+### 1.0.1
+- Dependencies upgraded because of security problems.
+
 ### 1.0.0
 - Initial release
 
