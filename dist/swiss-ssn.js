@@ -1,145 +1,79 @@
-(function (global, factory) {
-  if (typeof define === "function" && define.amd) {
-    define("SwissSSN", ["module", "exports"], factory);
-  } else if (typeof exports !== "undefined") {
-    factory(module, exports);
-  } else {
-    var mod = {
-      exports: {}
-    };
-    factory(mod, mod.exports);
-    global.SwissSSN = mod.exports;
-  }
-})(this, function (module, exports) {
-  "use strict";
-  /**
-   * Project: swiss-ssn
-   * Purpose: Validate and generate Swiss SSN's according to http://www.sozialversicherungsnummer.ch/aufbau-neu.htm
-   * Author:  teaddict
-   */
+"use strict";
 
-  //! https://github.com/teaddict/swiss-ssn | Version: 1.0.0
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
-
-  var _createClass = function () {
-    function defineProperties(target, props) {
-      for (var i = 0; i < props.length; i++) {
-        var descriptor = props[i];
-        descriptor.enumerable = descriptor.enumerable || false;
-        descriptor.configurable = true;
-        if ("value" in descriptor) descriptor.writable = true;
-        Object.defineProperty(target, descriptor.key, descriptor);
-      }
-    }
-
-    return function (Constructor, protoProps, staticProps) {
-      if (protoProps) defineProperties(Constructor.prototype, protoProps);
-      if (staticProps) defineProperties(Constructor, staticProps);
-      return Constructor;
-    };
-  }();
-
-  var SwissSSN = function () {
-    function SwissSSN() {
-      _classCallCheck(this, SwissSSN);
-    }
-
-    _createClass(SwissSSN, null, [{
-      key: "validateSSN",
-      value: function validateSSN(ssn) {
-
-        if (ssn === undefined || ssn === null) {
-          return false;
-        }
-
-        var parsedSSN = parse(ssn);
-        if (parsedSSN.length < 13) {
-          return false;
-        } else {
-          var checkDigit = getCheckDigit(parsedSSN);
-          if (parsedSSN[12] == checkDigit) {
-            return true;
-          } else {
-            return false;
-          }
-        }
-      }
-    }, {
-      key: "generateSSN",
-      value: function generateSSN() {
-        var countryCode = [7, 5, 6];
-        var randomNumbers = Array.from({ length: 9 }, function () {
-          return getRandomInt();
-        });
-        var ssnWithoutCheckDigit = countryCode.concat(randomNumbers);
-        var checkDigit = getCheckDigit(ssnWithoutCheckDigit);
-        var unformattedSSN = ssnWithoutCheckDigit.concat(checkDigit);
-        var ssn = ssnFormatter(unformattedSSN);
-        return ssn;
-      }
-    }]);
-
-    return SwissSSN;
-  }();
-
-  exports.default = SwissSSN;
-
-
-  var maxValue = 10;
-
-  /**
-  *returns a random digit
-  */
-  function getRandomInt() {
-    return Math.floor(Math.random() * Math.floor(maxValue));
-  }
-
-  function getCheckDigit(ssn) {
-    function isEven(x) {
-      return x % 2 == 0;
-    }
-
-    var total = 0;
-
-    for (var i = 0; i < 12; i += 1) {
-      if (isEven(i)) total += parseInt(ssn[i]);else total += parseInt(ssn[i]) * 3;
-    }
-
-    var expectedCheckDigit = 0;
-    if (total % 10 != 0) {
-      var roundTen = Math.floor(total / 10) * 10 + 10;
-      expectedCheckDigit = roundTen - total;
-    }
-
-    return expectedCheckDigit;
-  }
-
-  /**
-  * returns a formatted SSN '756.9217.0769.85'
-  */
-  function ssnFormatter(ssn) {
-    var ssnString = ssn.map(String);
-    var formattedSSN = "756." + ssnString.slice(3, 7).join('') + '.' + ssnString.slice(7, 11).join('') + '.' + ssnString.slice(11, 13).join('');
-    return formattedSSN;
-  }
-
-  /**
-   * Parse parameter given SSN string. Remove all characters except digits.
-   * @param ssn - {String} SSN to parse
-   * @returns {String}
-   */
-  function parse(ssn) {
-    return ssn.replace(/\./g, '');
-  }
-  module.exports = exports["default"];
+/**
+ * Project: swiss-ssn
+ * Purpose: Validate and generate Swiss SSN's according to http://www.sozialversicherungsnummer.ch/aufbau-neu.htm
+ * Author:  teaddict
+ * @version 1.0.2
+ */
+Object.defineProperty(exports, "__esModule", {
+  value: true
 });
+exports.default = void 0;
+class SwissSSN {
+  static #COUNTRY_CODE = [7, 5, 6];
+  static #MAX_VALUE = 10;
+  static #SSN_LENGTH = 13;
 
+  /**
+   * Validates parameter given SSN. Returns true if SSN is valid, otherwise false.
+   * @param {string} ssn - For example '756.9217.0769.85' or '7569217076985'
+   * @returns {boolean}
+   */
+  static validateSSN(ssn) {
+    if (!ssn) {
+      return false;
+    }
+    const parsedSSN = this.#parse(ssn);
+    if (parsedSSN.length !== this.#SSN_LENGTH) {
+      return false;
+    }
+    const checkDigit = this.#getCheckDigit(parsedSSN);
+    return parseInt(parsedSSN[12], 10) === checkDigit;
+  }
+
+  /**
+   * Creates a valid SSN using random numbers.
+   * @returns {string} - valid ssn.
+   */
+  static generateSSN() {
+    const randomNumbers = Array.from({
+      length: 9
+    }, () => Math.floor(Math.random() * this.#MAX_VALUE));
+    const ssnWithoutCheckDigit = [...this.#COUNTRY_CODE, ...randomNumbers];
+    const checkDigit = this.#getCheckDigit(ssnWithoutCheckDigit);
+    const unformattedSSN = [...ssnWithoutCheckDigit, checkDigit];
+    return this.#ssnFormatter(unformattedSSN);
+  }
+
+  /**
+   * Calculate check digit for SSN
+   * @private
+   */
+  static #getCheckDigit(ssn) {
+    const total = [...ssn].slice(0, 12).reduce((sum, digit, index) => {
+      const multiplier = index % 2 === 0 ? 1 : 3;
+      return sum + parseInt(digit, 10) * multiplier;
+    }, 0);
+    return total % 10 === 0 ? 0 : Math.ceil(total / 10) * 10 - total;
+  }
+
+  /**
+   * Format SSN with dots
+   * @private
+   */
+  static #ssnFormatter(ssn) {
+    const ssnString = ssn.map(String);
+    return `756.${ssnString.slice(3, 7).join('')}.${ssnString.slice(7, 11).join('')}.${ssnString.slice(11, 13).join('')}`;
+  }
+
+  /**
+   * Parse SSN string by removing all non-digit characters
+   * @private
+   */
+  static #parse(ssn) {
+    return ssn.replace(/\D/g, '');
+  }
+}
+exports.default = SwissSSN;
+module.exports = exports.default;

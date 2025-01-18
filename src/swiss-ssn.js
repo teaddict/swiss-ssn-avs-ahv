@@ -3,95 +3,79 @@
  * Project: swiss-ssn
  * Purpose: Validate and generate Swiss SSN's according to http://www.sozialversicherungsnummer.ch/aufbau-neu.htm
  * Author:  teaddict
+ * @version 1.0.2
  */
 
-//! https://github.com/teaddict/swiss-ssn | Version: 1.0.0
 export default class SwissSSN {
+  static #COUNTRY_CODE = [7, 5, 6]
+  static #MAX_VALUE = 10
+  static #SSN_LENGTH = 13
 
   /**
    * Validates parameter given SSN. Returns true if SSN is valid, otherwise false.
-   * @param ssn - {String} For example '756.9217.0769.85' or '7569217076985'
+   * @param {string} ssn - For example '756.9217.0769.85' or '7569217076985'
    * @returns {boolean}
    */
   static validateSSN(ssn) {
-    
-    if (ssn === undefined || ssn === null) {
-      return false;
+    if (!ssn) {
+      return false
     }
 
-    var parsedSSN = parse(ssn);
-    if(parsedSSN.length < 13) {
-      return false;
-    } else {
-      var checkDigit = getCheckDigit(parsedSSN);
-      if (parsedSSN[12] == checkDigit) {
-        return true;
-      } else {
-        return false;
-      }
+    const parsedSSN = this.#parse(ssn)
+    if (parsedSSN.length !== this.#SSN_LENGTH) {
+      return false
     }
 
+    const checkDigit = this.#getCheckDigit(parsedSSN)
+    return parseInt(parsedSSN[12], 10) === checkDigit
   }
 
   /**
    * Creates a valid SSN using random numbers.
-   * @returns {String} - valid ssn.
+   * @returns {string} - valid ssn.
    */
   static generateSSN() {
-    var countryCode = [7,5,6];
-    var randomNumbers = Array.from({length: 9}, () => getRandomInt());
-    var ssnWithoutCheckDigit = countryCode.concat(randomNumbers);
-    var checkDigit = getCheckDigit(ssnWithoutCheckDigit);
-    var unformattedSSN = ssnWithoutCheckDigit.concat(checkDigit);
-    var ssn = ssnFormatter(unformattedSSN);
-    return ssn;
-  }
-}
-
-const maxValue = 10;
-
-/**
-*returns a random digit
-*/
-function getRandomInt() {
-  return Math.floor(Math.random() * Math.floor(maxValue));
-}
-
-function getCheckDigit(ssn) {
-  function isEven(x) { 
-    return (x%2)==0; 
-  }
-  
-  var total = 0;
-  
-  for(var i = 0 ; i < 12 ; i+=1) {
-      if(isEven(i)) total += parseInt(ssn[i]);
-      else total += parseInt(ssn[i]) * 3;
-  }
-  
-  var expectedCheckDigit = 0;
-  if (total % 10 != 0) {
-      var roundTen = Math.floor(total/10) * 10 + 10;
-      expectedCheckDigit = roundTen - total;
+    const randomNumbers = Array.from(
+      { length: 9 }, 
+      () => Math.floor(Math.random() * this.#MAX_VALUE)
+    )
+    
+    const ssnWithoutCheckDigit = [...this.#COUNTRY_CODE, ...randomNumbers]
+    const checkDigit = this.#getCheckDigit(ssnWithoutCheckDigit)
+    const unformattedSSN = [...ssnWithoutCheckDigit, checkDigit]
+    
+    return this.#ssnFormatter(unformattedSSN)
   }
 
-  return expectedCheckDigit;
-}
+  /**
+   * Calculate check digit for SSN
+   * @private
+   */
+  static #getCheckDigit(ssn) {
+    const total = [...ssn]
+      .slice(0, 12)
+      .reduce((sum, digit, index) => {
+        const multiplier = index % 2 === 0 ? 1 : 3
+        return sum + (parseInt(digit, 10) * multiplier)
+      }, 0)
 
-/**
-* returns a formatted SSN '756.9217.0769.85'
-*/
-function ssnFormatter(ssn) {
-  var ssnString = ssn.map(String)
-  var formattedSSN = "756." + ssnString.slice(3,7).join('') + '.' + ssnString.slice(7,11).join('') + '.' + ssnString.slice(11,13).join('');
-  return formattedSSN;
-}
+    return total % 10 === 0 ? 0 : (Math.ceil(total / 10) * 10) - total
+  }
 
-/**
- * Parse parameter given SSN string. Remove all characters except digits.
- * @param ssn - {String} SSN to parse
- * @returns {String}
- */
-function parse(ssn) {
-  return ssn.replace(/\./g,'')
+  /**
+   * Format SSN with dots
+   * @private
+   */
+  static #ssnFormatter(ssn) {
+    const ssnString = ssn.map(String)
+    return `756.${ssnString.slice(3, 7).join("")}.${ssnString.slice(7, 11).join("")}.${ssnString.slice(11, 13).join("")}`
+  }
+
+  /**
+   * Parse SSN string by removing all non-digit characters
+   * @private
+   */
+  static #parse(ssn) {
+    return ssn.replace(/\D/g, "")
+  }
 }
