@@ -1,38 +1,44 @@
-var gulp = require('gulp'),
-  uglify = require('gulp-uglify'),
-  eslint = require('gulp-eslint')
-  rename = require('gulp-rename'),
-  cover = require('gulp-coverage');
+import gulp from 'gulp';
+import uglify from 'gulp-uglify';
+import eslint from 'gulp-eslint';
+import rename from 'gulp-rename';
+import mocha from 'gulp-mocha';
+import { deleteAsync } from 'del';
 
-var libSrc = 'swiss-ssn.js',
-    specSrc = 'test/swiss-ssn-test.js',
-    minified = 'swiss-ssn.min.js';
+const paths = {
+  src: 'src/swiss-ssn.js',
+  test: 'test/swiss-ssn-test.js',
+  dist: 'dist',
+};
 
-gulp.task('lint', function () {
-    return gulp.src([libSrc])
-        .pipe(eslint())
-        .pipe(eslint.format())
-        .pipe(eslint.failAfterError());
-});
+// Clean dist directory
+export const clean = () => deleteAsync(['dist']);
 
-gulp.task('test', [], function () {
-  return gulp.src([specSrc], { read: false })
-    .pipe(cover.instrument({
-      pattern: [libSrc],
-      debugDirectory: 'debug'
+// Lint JavaScript files
+export const lint = () => {
+  return gulp.src([paths.src, paths.test])
+    .pipe(eslint())
+    .pipe(eslint.format())
+    .pipe(eslint.failAfterError());
+};
+
+// Run tests
+export const test = () => {
+  return gulp.src(paths.test, { read: false })
+    .pipe(mocha({ require: ['@babel/register'] }));
+};
+
+// Build and minify
+export const build = () => {
+  return gulp.src(paths.src)
+    .pipe(uglify({
+      output: {
+        comments: 'some'
+      }
     }))
-    .pipe(mocha())
-    .pipe(cover.gather())
-    .pipe(cover.format())
-    .pipe(gulp.dest('reports'));
-});
+    .pipe(rename({ suffix: '.min' }))
+    .pipe(gulp.dest(paths.dist));
+};
 
-gulp.task('build', [], function () {
-  gulp.src(libSrc)
-    .pipe(uglify({preserveComments: 'some'}))
-    .pipe(rename(minified))
-    .pipe(gulp.dest('./'));
-});
-
-gulp.task('default', [ 'lint', 'test', 'build' ], function () {
-});
+// Default task
+export default gulp.series(clean, lint, test, build);
