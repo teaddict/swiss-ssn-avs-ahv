@@ -1,6 +1,6 @@
 {
   "name": "swiss-ssn",
-  "version": "1.0.2",
+  "version": "1.0.5",
   "license": "GPL",
   "description": "Small utility for validating and generating Swiss national identification number.",
   "author": "teaddict",
