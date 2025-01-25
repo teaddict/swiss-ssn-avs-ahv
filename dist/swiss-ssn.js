@@ -90,7 +90,7 @@
   }
 
   // Export for different environments
-  if (typeof window !== 'undefined') {
+  if (typeof window !== "undefined") {
     window.SwissSSN = SwissSSN; // Browser global
   }
   var _default = _exports.default = SwissSSN;
