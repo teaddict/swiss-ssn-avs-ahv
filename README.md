@@ -114,6 +114,12 @@ Test Online
 
 ## Changelog
 
+### 1.0.5
+- Fixed version number in package.json
+
+### 1.0.3
+- Fixed jest configuration
+
 ### 1.0.3
 - Fixed browser compatibility issues with UMD bundle
 - Added proper global exports for browser environments
