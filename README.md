@@ -114,6 +114,12 @@ Test Online
 
 ## Changelog
 
+### 1.0.6
+- Fixed npm package configuration to include dist files
+- Added explicit files field in package.json
+- Updated build process to ensure proper file inclusion
+- Fixed unpkg CDN availability
+
 ### 1.0.5
 - Fixed version number in package.json
 
