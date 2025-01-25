@@ -1,10 +1,16 @@
 {
   "name": "swiss-ssn",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "license": "GPL",
   "description": "Small utility for validating and generating Swiss national identification number.",
   "author": "teaddict",
   "main": "dist/swiss-ssn.js",
+  "files": [
+    "dist/",
+    "src/",
+    "README.md",
+    "LICENSE"
+  ],
   "keywords": [
     "Swiss",
     "SSN",
@@ -21,7 +27,7 @@
     "test": "jest",
     "test:watch": "npm test -- --watch",
     "lint": "eslint .",
-    "prepare": "npm run test && npm run dist",
+    "prepare": "npm run lint && npm run test && npm run dist",
     "validate": "npm ls"
   },
   "devDependencies": {

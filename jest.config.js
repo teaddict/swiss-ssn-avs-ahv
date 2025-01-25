@@ -1,17 +1,17 @@
 /** @type {import('jest').Config} */
 module.exports = {
-  testEnvironment: 'node',
+  testEnvironment: "node",
   transform: {
-    '^.+\\.js$': 'babel-jest'
+    "^.+\\.js$": "babel-jest"
   },
   moduleNameMapper: {
-    '^(\\.{1,2}/.*)\\.js$': '$1'
+    "^(\\.{1,2}/.*)\\.js$": "$1"
   },
-  testMatch: ['**/test/**/*.js'],
+  testMatch: ["**/test/**/*.js"],
   verbose: true,
   collectCoverage: true,
-  coverageDirectory: 'coverage',
-  coverageReporters: ['text', 'lcov'],
+  coverageDirectory: "coverage",
+  coverageReporters: ["text", "lcov"],
   coverageThreshold: {
     global: {
       branches: 80,
@@ -20,4 +20,4 @@ module.exports = {
       statements: 80
     }
   }
-}; 
+} 
