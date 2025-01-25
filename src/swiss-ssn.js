@@ -6,7 +6,7 @@
  * @version 1.0.2
  */
 
-export default class SwissSSN {
+class SwissSSN {
   static #COUNTRY_CODE = [7, 5, 6]
   static #MAX_VALUE = 10
   static #SSN_LENGTH = 13
@@ -79,3 +79,10 @@ export default class SwissSSN {
     return ssn.replace(/\D/g, "")
   }
 }
+
+// Export for different environments
+if (typeof window !== "undefined") {
+  window.SwissSSN = SwissSSN // Browser global
+}
+
+export default SwissSSN
