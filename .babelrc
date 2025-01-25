@@ -2,9 +2,17 @@
   "presets": [
     ["@babel/preset-env", {
       "targets": {
-        "node": "current"
-      }
+        "node": "current",
+        "browsers": "> 0.25%, not dead"
+      },
+      "modules": "umd"
     }]
   ],
-  "plugins": ["add-module-exports"]
+  "plugins": [
+    ["@babel/plugin-transform-modules-umd", {
+      "globals": {
+        "swiss-ssn": "SwissSSN"
+      }
+    }]
+  ]
 }

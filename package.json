@@ -5,7 +5,6 @@
   "description": "Small utility for validating and generating Swiss national identification number.",
   "author": "teaddict",
   "main": "dist/swiss-ssn.js",
-  "type": "module",
   "keywords": [
     "Swiss",
     "SSN",
@@ -29,6 +28,7 @@
     "@babel/cli": "^7.23.9",
     "@babel/core": "^7.23.9",
     "@babel/eslint-parser": "^7.23.10",
+    "@babel/plugin-transform-modules-umd": "^7.23.3",
     "@babel/preset-env": "^7.23.9",
     "@babel/register": "^7.23.7",
     "babel-jest": "^29.7.0",

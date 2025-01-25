@@ -34,6 +34,12 @@ export const build = () => {
     .pipe(uglify({
       output: {
         comments: 'some'
+      },
+      compress: {
+        pure_getters: true
+      },
+      mangle: {
+        reserved: ['SwissSSN']
       }
     }))
     .pipe(rename({ suffix: '.min' }))
