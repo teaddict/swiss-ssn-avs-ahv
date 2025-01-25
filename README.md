@@ -9,6 +9,7 @@ A lightweight JavaScript library for validating and generating Swiss National Id
 - Modern ES Module support
 - Full test coverage
 - TypeScript-friendly JSDoc annotations
+- Browser-ready UMD bundle
 
 ## Installation
 
@@ -25,7 +26,7 @@ pnpm add swiss-ssn
 
 ## Usage
 
-### ES Modules (Recommended)
+### ES Modules (Node.js)
 ```js
 import SwissSSN from 'swiss-ssn';
 
@@ -38,17 +39,29 @@ const newSSN = SwissSSN.generateSSN();
 console.log(newSSN); // e.g., '756.1234.5678.90'
 ```
 
-### Browser (UMD)
+### Browser
 ```html
+<!-- Use the minified UMD bundle -->
 <script src="https://unpkg.com/swiss-ssn/dist/swiss-ssn.min.js"></script>
 <script>
-  // Validate a SSN
+  // The SwissSSN class is available globally
   const isValid = SwissSSN.validateSSN('756.9217.0769.85');
   console.log(isValid); // true
 
   // Generate a random SSN
   const newSSN = SwissSSN.generateSSN();
   console.log(newSSN);
+</script>
+```
+
+### Browser (ES Modules)
+```html
+<!-- Use as ES Module in modern browsers -->
+<script type="module">
+  import SwissSSN from 'https://unpkg.com/swiss-ssn/dist/swiss-ssn.js';
+  
+  const isValid = SwissSSN.validateSSN('756.9217.0769.85');
+  console.log(isValid);
 </script>
 ```
 
@@ -100,6 +113,13 @@ Test Online
 [check from my website](http://teaddict.net/swiss-ssn.html)
 
 ## Changelog
+
+### 1.0.3
+- Fixed browser compatibility issues with UMD bundle
+- Added proper global exports for browser environments
+- Improved documentation for browser usage
+- Added ES Module example for modern browsers
+- Updated build configuration for better browser support
 
 ### 1.0.2
 - Modernized codebase with ES Modules
