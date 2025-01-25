@@ -19,6 +19,7 @@ jobs:
         uses: Ant0wan/openai-pr@v1
         with:
           api-key: ${{ secrets.OPENAI_API_KEY }}
+          model: "chatgpt-4o-latest"
           template-filepath: ".github/PR_TEMPLATE.md"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
